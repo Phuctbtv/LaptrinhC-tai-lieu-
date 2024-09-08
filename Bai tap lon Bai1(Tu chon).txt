@@ -1,0 +1,206 @@
+#include<bits/stdc++.h>
+using namespace std;
+class QuanLy {
+private:
+    string ma;
+    string ten;
+    int tuoi;
+    float diem;
+
+public:
+    QuanLy() : ma(""), ten(""), tuoi(0), diem(0.0) {}
+
+    QuanLy(string ma, string ten, int tuoi, float diem)
+        : ma(ma), ten(ten), tuoi(tuoi), diem(diem) {}
+
+    string getMa() const {
+        return ma;
+    }
+
+    string getTen() const {
+        return ten;
+    }
+
+    friend ostream& operator<<(ostream& os, const QuanLy& ql) {
+        os << "Ma: " << ql.ma << ", Ten: " << ql.ten << ", Tuoi: " << ql.tuoi << ", Diem: " << ql.diem;
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, QuanLy& ql) {
+        cout << "Nhap ma: ";
+        is >> ql.ma;
+        cout << "Nhap ten: ";
+        is.ignore();
+        getline(is, ql.ten);
+        cout << "Nhap tuoi: ";
+        is >> ql.tuoi;
+        cout << "Nhap diem: ";
+        is >> ql.diem;
+        return is;
+    }
+
+    bool operator<(const QuanLy& other) const {
+        return this->diem < other.diem;
+    }
+
+    bool operator>(const QuanLy& other) const {
+        return this->diem > other.diem;
+    }
+
+    bool operator==(const QuanLy& other) const {
+        return this->diem == other.diem;
+    }
+};
+
+class DanhSachQuanLy {
+private:
+    list<QuanLy> danhSach;
+
+public:
+    void themQuanLy() {
+        QuanLy ql;
+        cin >> ql;
+        danhSach.push_back(ql);
+    }
+
+    void xoaQuanLy(const string& ma) {
+        danhSach.remove_if([ma](const QuanLy& ql) {
+            return ql.getMa() == ma;
+        });
+    }
+
+    QuanLy* timQuanLyMax() {
+        if (danhSach.empty()) {
+            return nullptr;
+        }
+
+        auto maxIt = max_element(danhSach.begin(), danhSach.end(), [](const QuanLy& a, const QuanLy& b) {
+            return a > b;
+        });
+        return &(*maxIt);
+    }
+
+    QuanLy* timQuanLyMin() {
+        if (danhSach.empty()) {
+            return nullptr;
+        }
+
+        auto minIt = min_element(danhSach.begin(), danhSach.end(), [](const QuanLy& a, const QuanLy& b) {
+            return a < b;
+        });
+        return &(*minIt);
+    }
+
+    QuanLy* timQuanLy(const string& ma) {
+        auto it = find_if(danhSach.begin(), danhSach.end(),
+            [ma](const QuanLy& ql) {
+                return ql.getMa() == ma;
+            });
+
+        if (it != danhSach.end()) {
+            return &(*it);
+        } else {
+            return nullptr;
+        }
+    }
+
+    void hienThiDanhSach() {
+        for (const auto& ql : danhSach) {
+            cout << ql << endl;
+        }
+    }
+
+    void sapXepDanhSach() {
+        danhSach.sort([](const QuanLy& a, const QuanLy& b) {
+            return a < b;
+        });
+    }
+};
+
+class UngDungQuanLy {
+public:
+    static void chay() {
+        DanhSachQuanLy danhSachQuanLy;
+
+        int luaChon;
+
+        do {
+            cout << "\n===== MENU =====" << endl;
+            cout << "1. Them quan ly" << endl;
+            cout << "2. Xoa quan ly" << endl;
+            cout << "3. Hien thi danh sach" << endl;
+            cout << "4. Sap xep danh sach" << endl;
+            cout << "5. Tim quan ly co diem cao nhat" << endl;
+            cout << "6. Tim quan ly co diem thap nhat" << endl;
+            cout << "7. Tim kiem quan ly" << endl;
+            cout << "0. Thoat" << endl;
+
+            cout << "Nhap lua chon: ";
+            cin >> luaChon;
+
+            switch (luaChon) {
+                case 1:
+                    danhSachQuanLy.themQuanLy();
+                    break;
+                case 2: {
+                    string ma;
+                    cout << "Nhap ma quan ly can xoa: ";
+                    cin >> ma;
+                    danhSachQuanLy.xoaQuanLy(ma);
+                    cout << "Ða xoa quan ly." << endl;
+                    break;
+                }
+                case 3:
+                    cout << "\nDanh sach quan ly:" << endl;
+                    danhSachQuanLy.hienThiDanhSach();
+                    break;
+                case 4:
+                    danhSachQuanLy.sapXepDanhSach();
+                    cout << "\nDanh sach quan ly sau khi sap xep:" << endl;
+                    danhSachQuanLy.hienThiDanhSach();
+                    break;
+                case 5: {
+                    QuanLy* qlMax = danhSachQuanLy.timQuanLyMax();
+                    if (qlMax != nullptr) {
+                        cout << "Quan ly co diem cao nhat: " << *qlMax << endl;
+                    } else {
+                        cout << "Danh sach rong." << endl;
+                    }
+                    break;
+                }
+                case 6: {
+                    QuanLy* qlMin = danhSachQuanLy.timQuanLyMin();
+                    if (qlMin != nullptr) {
+                        cout << "Quan ly co diem thap nhat: " << *qlMin << endl;
+                    } else {
+                        cout << "Danh sach rong." << endl;
+                    }
+                    break;
+                }
+                case 7: {
+                    string ma;
+                    cout << "Nhap ma quan ly can tim: ";
+                    cin >> ma;
+                    QuanLy* qlTimThay = danhSachQuanLy.timQuanLy(ma);
+                    if (qlTimThay != nullptr) {
+                        cout << "Quan ly tim thay: " << *qlTimThay << endl;
+                    } else {
+                        cout << "Khong tim thay quan ly." << endl;
+                    }
+                    break;
+                }
+                case 0:
+                    cout << "Chuong trinh ket thuc." << endl;
+                    break;
+                default:
+                    cout << "Lua chon không hop le. Vui long nhap lai." << endl;
+            }
+
+        } while (luaChon != 0);
+    }
+};
+
+int main() {
+    UngDungQuanLy::chay();
+    return 0;
+}

@@ -1,0 +1,3 @@
+MS001 Sách 1 Vị trí 1 5
+MS002 Sách 2 Vị trí 2 3
+MS003 Sách 3 Vị trí 3 2

@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<math.h>
+float max(float a[], int n)
+{
+    float max = a[0];
+    for (int i = 1; i < n; i++)
+        if (max < a[i])
+            max = a[i];
+    return max;
+}
+int main(){
+	int i,n,dem=0;
+	printf("n=");
+	scanf("%d",&n);
+	float x[n],y[n];
+	for(i=1;i<=n;++i)
+	{
+		printf("\n x%d=",i);
+		scanf("%f",&x[i]);
+		printf("\n y%d=",i);
+		scanf("%f",&y[i]);
+	}
+	for(i=1;i<=n;++i){
+		printf("%.1f%.1f\n",x[i],y[i]);
+	}
+	for(i=1;i<=n;++i){
+	if(x[i]<0 && y[i]<0)
+	dem++;}
+	{
+		printf("so diem thuoc goc phan tu thu 3 la:%d",dem);
+	}
+	    float s[100];
+		for(i=1;i<=n;++i){
+	s[i]=sqrt(pow(x[i],2)+pow(y[i],2));}
+    printf("\n max la =%f",max(s,i));
+    
+
+
+}

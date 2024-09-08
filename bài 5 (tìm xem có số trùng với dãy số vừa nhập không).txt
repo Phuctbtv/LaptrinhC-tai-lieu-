@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<math.h>
+int main(){
+	int i,n,a[100],dem=0,s=0;
+	float x;
+	printf("n=");
+	scanf("%d",&n);
+	for(i=1;i<=n;++i){
+		printf("a%d=",i);
+		scanf("%d",&a[i]);
+	}
+	printf("day so vua nhap la \n");
+	for(i=1;i<=n;++i)
+	printf("%d\n",a[i]);
+
+printf("x=");
+scanf("%f",&x);
+for(i=1;i<=n;++i)
+if(a[i]==x){
+	printf("day so co so trung voi x");
+	dem++;
+	break;
+}
+if(dem==0){
+	printf("day so khong co trung voi x");
+}
+for(i=2;i<=n;++i)
+s=s+((a[i-1]+a[i])/(a[i-1]-a[i]));
+printf("tong=%d \n",s);
+}

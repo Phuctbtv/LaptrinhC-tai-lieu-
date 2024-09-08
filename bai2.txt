@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include<math.h>
+int main() {
+    int n;
+    printf("Nhap so phan tu cua day: ");
+    scanf("%d", &n);
+
+    float a[n];
+    printf("Nhap day so thuc:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%f", &a[i]);
+    }
+    printf("Day so thuc: ");
+    for (int i = 0; i < n; i++) {
+        printf("%.2f ", a[i]);
+    }
+    printf("\n");
+    int c= 0;
+    for (int i = 0; i < n -1; i++) {
+        if (fmod(a[i + 1], a[i]) == 0) {
+            c++;
+        }
+    }
+    printf("So cap thoa man dieu kien: %d\n", c);
+    float s1 = 0;
+    float s2 = 0;
+    for (int i = 0; i < n; i++) {
+        s2 += a[i];
+        s1 += s2;
+    }
+    printf("Tong: %.2f\n", s1);
+
+    return 0;
+}

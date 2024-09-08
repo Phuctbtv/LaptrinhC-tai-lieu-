@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct{
+	char ms[10];
+	char ts[10];
+	char tg[10];
+	int nam;
+	float gia;
+}s;
+void doc(FILE *f,s ds[],int *n){
+		if (f==NULL){
+		printf ("Khong the mo tep");
+		exit(1);
+	}
+	fscanf(f,"%d",n);
+	for(int i=1;i<=*n;++i){
+	fscanf(f,"%s %s %s %d %f",&ds[i].ms,&ds[i].ts,&ds[i].tg,&ds[i].nam,&ds[i].gia);
+}
+}
+int main(){
+	s ds[100];
+	int n;
+	int a=0;
+	FILE*f;
+char filename[30];
+   printf("Ten tep:");gets(filename);
+   f=fopen(filename,"rt");
+   doc(f,ds,&n);
+   char tensach[30];
+   printf("Nhap Tensach: ");
+   gets(tensach);
+   float giacantim;
+   printf("Gia sach can tim: ");
+   scanf("%f",&giacantim);
+   for( int i=1;i<=n;++i){
+   	if(strcmp(ds[i].ts,tensach)==0&&ds[i].gia==giacantim){
+   		printf("Ho ten va Gia can tim:\n");
+   		printf("%s %10.2f",ds[i].ts,ds[i].gia);
+   		a++;
+	   }  
+   }
+   if(a==0){
+   	printf("Khong co trong danh sach\n");
+   }
+}

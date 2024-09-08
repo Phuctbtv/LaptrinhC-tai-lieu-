@@ -1,0 +1,208 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Book {
+private:
+    string maSach;
+    string tenSach;
+    string viTri;
+    int soLuong;
+
+public:
+    Book(const string& maSach, const string& tenSach, const string& viTri, int soLuong) {
+        this->maSach = maSach;
+        this->tenSach = tenSach;
+        this->viTri = viTri;
+        this->soLuong = soLuong;
+    }
+
+    string getMaSach() const {
+        return maSach;
+    }
+
+    void setMaSach(const string& maSach) {
+        this->maSach = maSach;
+    }
+
+    string getTenSach() const {
+        return tenSach;
+    }
+
+    void setTenSach(const string& tenSach) {
+        this->tenSach = tenSach;
+    }
+
+    string getViTri() const {
+        return viTri;
+    }
+
+    void setViTri(const string& viTri) {
+        this->viTri = viTri;
+    }
+
+    int getSoLuong() const {
+        return soLuong;
+    }
+
+    void setSoLuong(int soLuong) {
+        this->soLuong = soLuong;
+    }
+};
+
+class HashTable {
+private:
+    static const int TABLE_SIZE = 100;
+
+    struct Node {
+        Book* data;
+        Node* next;
+
+        Node(Book* book) : data(book), next(nullptr) {}
+    };
+
+    Node* nodes[TABLE_SIZE];
+
+public:
+    HashTable() {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            nodes[i] = nullptr;
+        }
+    }
+
+    int hashFunction(string key) {
+        int hash = 0;
+        for (char c : key) {
+            hash += c;
+        }
+        return hash % TABLE_SIZE;
+    }
+
+    void addBook(Book* book) {
+        int index = hashFunction(book->getMaSach());
+        Node* newNode = new Node(book);
+
+        if (nodes[index] == nullptr) {
+            nodes[index] = newNode;
+        } else {
+            newNode->next = nodes[index];
+            nodes[index] = newNode;
+        }
+    }
+
+    Book* findBook(string maSach) {
+        int index = hashFunction(maSach);
+
+        Node* current = nodes[index];
+        while (current != nullptr) {
+            if (current->data->getMaSach() == maSach) {
+                return current->data;
+            }
+            current = current->next;
+        }
+
+        return nullptr;
+    }
+
+    void removeBook(string maSach) {
+        int index = hashFunction(maSach);
+
+        Node* current = nodes[index];
+        Node* previous = nullptr;
+
+        while (current != nullptr && current->data->getMaSach() != maSach) {
+            previous = current;
+            current = current->next;
+        }
+
+        if (current == nullptr) {
+            return; 
+        }
+
+        if (previous == nullptr) {
+            nodes[index] = current->next;
+        } else {
+            previous->next = current->next;
+        }
+
+        delete current;
+    }
+
+    void saveToFile(string fileName) {
+        ofstream file(fileName);
+        if (!file.is_open()) {
+            cout << "Không the mo file" << endl;
+            return;
+        }
+
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            Node* current = nodes[i];
+            while (current != nullptr) {
+                file << current->data->getMaSach() << " "
+                     << current->data->getTenSach() << " "
+                     << current->data->getViTri() << " "
+                     << current->data->getSoLuong() << endl;
+                current = current->next;
+            }
+        }
+
+        file.close();
+    }
+};
+
+class Library {
+private:
+    HashTable table;
+
+public:
+    void loadLibraryFromFile(string fileName) {
+        ifstream file(fileName);
+        if (!file.is_open()) {
+            cout << "Không the mo file" << endl;
+            return;
+        }
+
+        while (!file.eof()) {
+            string maSach, tenSach, viTri;
+            int soLuong;
+
+            file >> maSach >> tenSach >> viTri >> soLuong;
+            Book* book = new Book(maSach, tenSach, viTri, soLuong);
+            table.addBook(book);
+        }
+
+        file.close();
+    }
+
+    Book* searchBook(string maSach) {
+        return table.findBook(maSach);
+    }
+
+    void addBook(Book* book) {
+        table.addBook(book);
+    }
+
+    void removeBook(string maSach) {
+        table.removeBook(maSach);
+    }
+
+    void saveLibraryToFile(string fileName) {
+        table.saveToFile(fileName);
+    }
+};
+
+int main() {
+    Library myLibrary;
+    myLibrary.loadLibraryFromFile("phuc.txt");
+    Book* book = myLibrary.searchBook("MS001");
+    if (book != nullptr) {
+        cout << "Tim thay sach: " << book->getTenSach() << " (Ma sach: " << book->getMaSach() << ")"
+             << " So luong: " << book->getSoLuong() << endl;
+    } else {
+        cout << "Không tim thay sach." << endl;
+    }
+    Book* newBook = new Book("MS002", "Sach moi", "Vi tri moi", 10);
+    myLibrary.addBook(newBook);
+    myLibrary.removeBook("MS003");
+    myLibrary.saveLibraryToFile("library_updated.txt");
+    return 0;
+}
